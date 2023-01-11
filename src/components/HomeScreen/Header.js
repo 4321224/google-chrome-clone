@@ -18,7 +18,7 @@ function Header() {
           </li>
           <li className="nav-item">
             <a href="/" className="nav-link">
-              <i className="bi bi-grid-3x3-gap-fill" />
+              <i className="fa-solid fa-grid" />
             </a>
           </li>
           <li className="nav-item">
