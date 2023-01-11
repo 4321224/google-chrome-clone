@@ -6,13 +6,25 @@ import "./HeaderSearch.css";
 const HeaderSearch = ({ searchTerm, setSearch }) => {
   const [term, setTerm] = useState("");
   const [isVoiceSearch, setIsVoiceSearch] = useState(false);
-  const [voiceText, setVoiceText] = useState(false)
+  const [voiceText, setVoiceText] = useState("");
+
   useEffect(() => {
     setTerm(searchTerm);
   }, []);
   const clearVoiceSearch = () => {
     setIsVoiceSearch(false);
     recognition.stop();
+  };
+  const openVoiceSearch = () => {
+    setIsVoiceSearch(true);
+    recognition.start();
+    recognition.onresult = (event) => {
+      var current = event.resultIndex;
+      var transcript = event.results[current][0].transcript;
+      setVoiceText(voiceText + transcript);
+      setTerm(voiceText + transcript);
+      setSearch(voiceText + transcript);
+    };
   };
   const clearTerm = () => {
     setTerm("");
@@ -23,22 +35,14 @@ const HeaderSearch = ({ searchTerm, setSearch }) => {
   };
   const handleSearch = () => {
     if (
-        searchTerm !== term.trim() &&
-        (/^[a-zA-Z0-9].*/.test(term.trim()) ||
-          /^[a-zA-Z0-9]+[" "]/.test(term.trim()) ||
-          /^[" "]+[a-zA-Z0-9]/.test(term.trim()))
-      ) {
-        setSearch(term.trim());
-      }
-  }
-
-  return (
-    <>
-   {isVoiceSearch ? (
-    <VoiceSearchBox voiceText={voiceText} clearVoiceSearch={clearVoiceSearch} openVoiceSearch={openVoiceSearch}
-   )}
-    </>
-  )
+      searchTerm !== term.trim() &&
+      (/^[a-zA-Z0-9].*/.test(term.trim()) ||
+        /^[a-zA-Z0-9]+[" "]/.test(term.trim()) ||
+        /^[" "]+[a-zA-Z0-9]/.test(term.trim()))
+    ) {
+      setSearch(term.trim());
+    }
+  };
 };
 
 export default HeaderSearch;
